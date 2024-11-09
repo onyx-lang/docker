@@ -3,6 +3,11 @@ use core {*}
 main :: () {
     args := os.args()
     no_cache := Slice.some(args, [x](x == "--no-cache"))
+    tag := Slice.find_opt(args, [x](str.starts_with(x, "--tag=")))
+        |> Optional.transform(x => {
+            _, prefix := str.bisect(x, '=')
+            return prefix
+        })
 
     build_files := os.list_directory("./build")
         |> Iterator.map(x => x->name_copy())
@@ -28,6 +33,16 @@ main :: () {
 
         if output != .Success {
             printf("\x1b[91mFailed to build '{}'\x1b[0m\n", build_name)
+        } else {
+            tag->with([prefix] {
+                os.command()
+                    |> .path("docker")
+                    |> .args(.["tag"])
+                    |> .args(.[tprintf("onyx:{}", build_name)])
+                    |> .args(.[tprintf("{}:{}", prefix, build_name)])
+                    |> .run()
+                    |> printf("Tag result: {}\n", _)
+            })
         }
     }
 }
