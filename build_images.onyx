@@ -1,0 +1,33 @@
+use core {*}
+
+main :: () {
+    args := os.args()
+    no_cache := Slice.some(args, [x](x == "--no-cache"))
+
+    build_files := os.list_directory("./build")
+        |> Iterator.map(x => x->name_copy())
+        |> Iterator.collect()
+    
+    for file in build_files {
+        build_name, _ := str.bisect(file, '.')
+
+        logf(.Info, "========= Building {} =========\n", build_name)
+        command := os.command()
+            |> .path("docker")
+            |> .args(.["build"])
+            |> .args(.["-t", tprintf("onyx:{}", build_name)])
+            |> .args(.["-f", tprintf("./build/{}", file)])
+
+        if no_cache {
+            command = os.Command.args(command, .["--no-cache"])
+        }
+        
+        output := command
+            |> .args(.["."])
+            |> .run()
+
+        if output != .Success {
+            printf("\x1b[91mFailed to build '{}'\x1b[0m\n", build_name)
+        }
+    }
+}
