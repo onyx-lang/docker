@@ -34,7 +34,7 @@ main :: () {
         if output != .Success {
             printf("\x1b[91mFailed to build '{}'\x1b[0m\n", build_name)
         } else {
-            tag->with([prefix] {
+            if tag as prefix {
                 os.command()
                     |> .path("docker")
                     |> .args(.["tag"])
@@ -42,7 +42,7 @@ main :: () {
                     |> .args(.[tprintf("{}:{}", prefix, build_name)])
                     |> .run()
                     |> printf("Tag result: {}\n", _)
-            })
+            }
         }
     }
 }
