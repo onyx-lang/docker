@@ -9,7 +9,7 @@ main :: () {
             return prefix
         })
 
-    build_files := os.list_directory("./build")
+    build_files := os.Directory.list("./build")
         |> Iterator.map(x => x->name_copy())
         |> Iterator.collect()
     
