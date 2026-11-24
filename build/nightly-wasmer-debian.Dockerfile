@@ -3,7 +3,7 @@ FROM debian:bookworm AS build
 RUN apt-get update
 RUN apt-get install --yes gcc git linux-headers-amd64 curl
 
-RUN curl -sSfL -o wasmer.tar.gz https://github.com/wasmerio/wasmer/releases/download/v5.0.1/wasmer-linux-amd64.tar.gz
+RUN curl -sSfL -o wasmer.tar.gz https://github.com/wasmerio/wasmer/releases/download/v4.4.0/wasmer-linux-amd64.tar.gz
 RUN mkdir /root/.wasmer
 RUN tar x -C /root/.wasmer -z -f wasmer.tar.gz
 

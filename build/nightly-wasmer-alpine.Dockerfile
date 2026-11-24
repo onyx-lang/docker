@@ -2,7 +2,7 @@ FROM alpine AS build
 
 RUN apk add gcc git musl-dev linux-headers curl
 
-RUN curl -sSfL -o wasmer.tar.gz https://github.com/wasmerio/wasmer/releases/download/v5.0.1/wasmer-linux-musl-amd64.tar.gz
+RUN curl -sSfL -o wasmer.tar.gz https://github.com/wasmerio/wasmer/releases/download/v4.4.0/wasmer-linux-musl-amd64.tar.gz
 RUN mkdir /root/.wasmer
 RUN tar x -C /root/.wasmer -z -f wasmer.tar.gz
 
